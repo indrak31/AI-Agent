@@ -1,0 +1,18 @@
+{
+  "name": "monad-ai-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Autonomous DeFi trading agent scaffold for Monad testnet.",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy:hello": "hardhat run scripts/deploy_hello_world.js --network monadTestnet",
+    "deploy:killswitch": "hardhat run scripts/deploy_killswitch.js --network monadTestnet",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.10"
+  }
+}
+
