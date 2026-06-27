@@ -1,81 +1,244 @@
-# Monad AI Agent
+# 🤖 Monad AI Agent
 
-This repository scaffolds the full 12-task hackathon build described in the prompt file:
+> **Autonomous AI Trading Agent built on Monad Testnet using MiniMax AI, Pyth Network Oracle, Solidity Smart Contracts, and automated risk management.**
 
-- Hardhat deployment and verification on Monad testnet
-- `KillSwitch.sol` guardrails contract with tests
-- Python price polling, EMA strategy, LLM decision loop, swap execution helper, event listener, and Rich dashboard
-- Operator docs for edge cases and the live demo
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![Monad](https://img.shields.io/badge/Network-Monad%20Testnet-purple)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.28-black)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## Assumptions
+---
 
-- Current Monad testnet values were verified against the official Monad docs on June 25, 2026:
-  - `chainId`: `10143`
-  - testnet RPC: `https://testnet-rpc.monad.xyz`
-  - faucet: `https://faucet.monad.xyz`
-- Current Monad oracle docs list the Pyth testnet contracts below:
-  - stable price feeds: `0x2880aB155794e7179c9eE2e38200202908C17B43`
-  - beta price feeds: `0xad2B52D2af1a9bD5c561894Cdd84f7505e1CD0B5`
-- Pyth feed IDs and the Monad testnet DEX/router address are intentionally left as `.env` values because they are the pieces most likely to drift and must be re-checked before live testing.
-- This scaffold is testnet-only. Keep `ENABLE_LIVE_SWAPS=false` until every address, token decimal, approval, and feed ID has been verified.
+# 🚀 Overview
 
-## Install
+Monad AI Agent is an autonomous on-chain trading system that combines **AI reasoning**, **real-time oracle data**, and **smart contract risk management** to make explainable trading decisions.
 
-```powershell
-Copy-Item .env.example .env
+Unlike traditional bots that execute predefined strategies, Monad AI Agent:
+
+* Reads live market prices from **Pyth Network**
+* Applies an **EMA trading strategy**
+* Uses **MiniMax AI (NVIDIA NIM)** to reason about the market
+* Protects funds using an on-chain **KillSwitch** smart contract
+* Executes trades only when predefined safety conditions are satisfied
+
+---
+
+# ✨ Features
+
+* 🤖 AI-powered market reasoning
+* 📈 EMA crossover trading strategy
+* 🔮 Pyth Oracle integration
+* 🛡 KillSwitch smart contract protection
+* ⚡ Monad Testnet deployment
+* 📊 Live terminal dashboard
+* 📜 Event monitoring
+* 💹 Automated swap execution
+* 🔒 Risk management
+* 🧠 Explainable AI decisions
+
+---
+
+# 🏗 Architecture
+
+```text
+                 ┌─────────────────────────┐
+                 │     Dashboard (UI)      │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │      AI Agent           │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │     MiniMax AI          │
+                 │   (NVIDIA NIM API)      │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │    EMA Strategy         │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │     Pyth Oracle         │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │ KillSwitch SmartContract│
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │    Monad Testnet        │
+                 └─────────────────────────┘
+```
+
+---
+
+# 🛠 Tech Stack
+
+### Blockchain
+
+* Monad Testnet
+* Solidity
+* Hardhat
+
+### Backend
+
+* Python
+* Web3.py
+
+### AI
+
+* MiniMax M2.7
+* NVIDIA NIM API
+
+### Oracle
+
+* Pyth Network
+
+### Frontend (Current)
+
+* Rich Terminal Dashboard
+
+### Frontend (Planned)
+
+* Next.js
+* Tailwind CSS
+* Framer Motion
+
+---
+
+# 📂 Project Structure
+
+```text
+agent/          AI Agent Logic
+contracts/      Solidity Smart Contracts
+scripts/        Deployment Scripts
+test/           Contract Tests
+docs/           Documentation
+```
+
+---
+
+# ⚙ Installation
+
+```bash
+git clone https://github.com/indrak31/AI-Agent.git
+
+cd AI-Agent
+
 npm install
+
 python -m pip install -r requirements.txt
+
+cp .env.example .env
 ```
 
-## Hardhat workflow
+Configure your `.env` before running.
 
-Generate or import a dedicated testnet wallet, then fund it from the official faucet after you verify the faucet URL in Monad's docs:
+---
 
-```powershell
-node -e "const { Wallet } = require('ethers'); const w = Wallet.createRandom(); console.log('address=' + w.address); console.log('privateKey=' + w.privateKey);"
-```
+# 🚀 Deploy Contracts
 
-Set `DEPLOYER_PRIVATE_KEY` in `.env`, then compile, test, and deploy:
-
-```powershell
+```bash
 npm run compile
+
 npm test
+
 npm run deploy:hello
+
 npm run deploy:killswitch
 ```
 
-Verify on Monad testnet:
+---
 
-```powershell
-npx hardhat verify --network monadTestnet <HELLO_WORLD_ADDRESS> "<HELLO_WORLD_GREETING>"
-npx hardhat verify --network monadTestnet <KILLSWITCH_ADDRESS> <DAILY_CAP_WEI_18> <PER_TRADE_LIMIT_WEI_18> <COOLDOWN_SECONDS>
-```
+# ▶ Run the AI Agent
 
-Confirmation steps:
+Terminal 1
 
-- Check the deployment transaction hash in the script output.
-- Open the address on `https://testnet.monadvision.com` or `https://testnet.monadscan.com`.
-- Monad's Hardhat verification guide notes that the command can print an error even when verification succeeds, so confirm in the explorer UI.
-
-## Python workflow
-
-Run the agent and dashboard as separate processes:
-
-```powershell
-python -m agent.agent_loop
+```bash
 python -m agent.dashboard
 ```
 
-Utility entry points:
+Terminal 2
 
-```powershell
+```bash
+python -m agent.agent_loop
+```
+
+Utility Commands
+
+```bash
 python -m agent.price_feed
+
 python -m agent.event_listener
 ```
 
-## TODO before live testing
+---
 
-- Replace the placeholder Pyth feed IDs in `.env` with the current official `ETH/USD` and `USDC/USD` feed IDs from the Pyth price feed ID page.
-- Confirm the DEX/router contract, token addresses, and decimals from the DEX's official Monad testnet docs.
-- Seed the `KillSwitch` contract with the assets it will trade and ensure the router has the required allowance from the contract address.
-- Decide whether your trade `size` should represent quote-token notional, base-token amount, or another normalized unit, then keep the agent, router amounts, and `KillSwitch` limits aligned to that convention.
+# 🛡 Safety Features
+
+* Daily trading limits
+* Maximum trade size
+* Cooldown timer
+* Emergency pause
+* Oracle validation
+* AI confidence filtering
+
+---
+
+# 📸 Screenshots
+
+> Add your dashboard screenshots here.
+
+* Dashboard
+* AI Reasoning
+* KillSwitch
+* Trade History
+
+---
+
+# 🎥 Demo
+
+Coming Soon
+
+* Live Demo
+* Demo Video
+
+---
+
+# 🗺 Roadmap
+
+* Web Dashboard
+* TradingView Charts
+* Multi-token Trading
+* Portfolio Analytics
+* Telegram Alerts
+* Multi-Agent Coordination
+* Reinforcement Learning
+
+---
+
+# 🤝 Team
+
+Built for the Monad Hackathon
+
+* **Indra Kurkute**
+* **ALOK AAGE**
+* **ANNANYA UKEY**
+
+---
+
+# 📄 License
+
+MIT License
+
+---
+
+⭐ If you like this project, consider giving it a star on GitHub!
